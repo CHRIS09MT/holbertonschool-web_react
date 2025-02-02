@@ -1,47 +1,57 @@
-interface DirectorInterface{
-	workFromHome(): string;
-	getCoffeeBreak(): string;
-	workDirectorTasks(): string;
+interface DirectorInterface {
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workDirectorTasks(): string;
 }
 
-interface TeacherInterface{
-	workFromHome(): string;
-	getCoffeeBreak(): string;
-	workDirectorTasks(): string;
+interface TeacherInterface {
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workTeacherTasks(): string;
 }
 
-class Director implements DirectorInterface{
-	workFromHome(): string{
-		return "Working from home"
-	}
-	getCoffeeBreak(): string{
-		return "Getting a coffee break"
-	}
-	workDirectorTasks(): string{
-		return "Getting to director tasks"
-	}
-}
+class Director implements DirectorInterface {
+    workFromHome(): string {
+        return "Working from home";
+    }
 
-class Teacher implements TeacherInterface{
-	workFromHome(): string{
-		return "Cannot work from home"
-	}
-	getCoffeeBreak(): string{
-		return "Cannot have a break"
-	}
-	workDirectorTasks(): string{
-		return "Getting to work"
-	}
-}
+    getCoffeeBreak(): string {
+        return "Getting a coffee break";
+    }
 
-function createEmployee(salary: number | string): Director | Teacher {
-    if (typeof salary === "number" && salary < 500) {
-        return new Teacher();
-    } else {
-        return new Director();
+    workDirectorTasks(): string {
+        return "Getting to director tasks";
     }
 }
 
-console.log(createEmployee(200) instanceof Teacher);
-console.log(createEmployee(1000) instanceof Director);
-console.log(createEmployee('$500') instanceof Director);
+class Teacher implements TeacherInterface {
+    workFromHome(): string {
+        return "Cannot work from home";
+    }
+
+    getCoffeeBreak(): string {
+        return "Cannot have a break";
+    }
+
+    workTeacherTasks(): string {
+        return "Getting to work";
+    }
+}
+
+function isDirector(employee: DirectorInterface | TeacherInterface): employee is Director {
+    return (employee as Director).workDirectorTasks !== undefined;
+}
+
+function executeWork(employee: DirectorInterface | TeacherInterface): void {
+    if (isDirector(employee)) {
+        console.log(employee.workDirectorTasks());
+    } else {
+        console.log(employee.workTeacherTasks());
+    }
+}
+
+const director = new Director();
+const teacher = new Teacher();
+
+executeWork(director);
+executeWork(teacher);
